@@ -45,14 +45,18 @@ function! GetSolIndent()
     if this_line =~? '\<end\s*[a-zA-Z][a-zA-Z0-9]'
       let matches = matchlist( this_line, '\<end\s*\([a-zA-Z][a-zA-Z0-9]\)' )
       if this_line =~? '\<' . matches[ 1 ] . '\>'
-        return prev_codeline_indent
+        break
       else
         return prev_codeline_indent - &sw
       endif
     endif
 
     if this_line =~? '\<\%(else\|elsif\)\>'
-      return prev_codeline_indent - &sw
+      if this_line =~? '\<if\>'
+        break
+      else
+        return prev_codeline_indent - &sw
+      endif
     endif
 
     if this_line =~? '\<begin\>'
@@ -74,14 +78,22 @@ function! GetSolIndent()
 
   if prev_codeline =~? '\<else\>'
     if prev_codeline =~? '\<then\>'
-      return prev_codeline_indent
+      break
     else
       return prev_codeline_indent + &sw
     endif
   endif
 
   if prev_codeline =~? '\<\%(begin\|then\|do\|func\)\>'
-    return prev_codeline_indent + &sw
+    if prev_codeline =~? '\<begin\>' && prev_codeline !~? '\<end\s+[a-zA-Z][a-zA-Z0-9]'
+      return prev_codeline_indent + &sw
+    elseif prev_codeline =~? '\<then\>' && prev_codeline !~? '\<endif\>'
+      return prev_codeline_indent + &sw
+    elseif prev_codeline =~? '\<do\>' && prev_codeline !~? '\<end\%(for\|while\)\>'
+      return prev_codeline_indent + &sw
+    elseif prev_codeline =~? '\<func\>'
+      return prev_codeline_indent + &sw
+    endif
   endif
 
   if prev_codeline =~? '\<\%(type\|const\|var\)\>'
@@ -89,13 +101,14 @@ function! GetSolIndent()
     " otherwise use the usual shift.
     if prev_codeline =~? ';'
       " TODO Could be better using the length
-      if prev_codeline =~? '\<type\>'
-        let s:special_indent = 4
-      elseif prev_codeline =~? '\<const\>'
-        let s:special_indent = 5
-      elseif prev_codeline =~? '\<var\>'
-        let s:special_indent = 3
-      endif
+      " if prev_codeline =~? '\<type\>'
+      "   let s:special_indent = 4
+      " elseif prev_codeline =~? '\<const\>'
+      "   let s:special_indent = 5
+      " elseif prev_codeline =~? '\<var\>'
+      "   let s:special_indent = 3
+      " endif
+      let s:special_indent = 5
       let s:special_indent += &sw - s:special_indent % &sw
     else
       let s:special_indent = &sw
