@@ -16,7 +16,7 @@ syn keyword solTypeDef TYPE VAR CONST
 syn keyword solBlock BEGIN END 
 syn keyword solConditional IF THEN ENDIF ELSIF ELSE
 syn keyword solRepeat WHILE DO ENDWHILE FOR TO ENDFOR FOREACH ENDFOREACH
-syn keyword solCommand RETURN READ WRITE RD WR DEFINE ASSIGN
+syn keyword solCommand RETURN READ WRITE RD WR DEFINE ASSIGN BREAK
 syn keyword solBool TRUE FALSE
 
 syn match solSymbolOperator "\([()\[\]+*/:.,;=-]\|<=\|>=\|==\|!=\)"
