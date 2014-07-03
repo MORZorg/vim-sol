@@ -21,7 +21,7 @@ syn keyword solBool TRUE FALSE
 
 syn match solSymbolOperator "\([()\[\]+*/:.,;=-]\|<=\|>=\|==\|!=\)"
 syn match solWordOperator /\<\(AND\|OR\|IN\|NOT\|TOINT\|TOREAL\)\>/
-syn match solString "\".\{-}\""
+syn match solString "\"\(.\|\n\)\{-}\""
 syn match solCharacter "\'.\+\'"
 syn match solNumber "\<[0-9]\+"
 syn match solFloat "\<[0-9]\+\.[0-9]\+"
